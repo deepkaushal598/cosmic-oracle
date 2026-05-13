@@ -56,7 +56,7 @@ function App() {
             sequence={[
               "Discover the universe that welcomed your birth...",
               2000,
-              "Reveal your cosmic destiny Srishtig...",
+              "Reveal your cosmic destiny Srishti...",
               2000,
               "Unlock the secrets written in the stars...",
               2000,
