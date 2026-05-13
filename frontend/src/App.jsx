@@ -34,7 +34,7 @@ function App() {
           className="text-center"
         >
           <h1 className="text-6xl font-bold text-purple-300 mb-4">
-            Cosmic Birthday Oracle lala✨
+            Cosmic Birthday Oracle ✨
           </h1>
 
           <p className="text-gray-400 mb-10">
