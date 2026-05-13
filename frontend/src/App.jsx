@@ -1,117 +1,165 @@
 import { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { TypeAnimation } from "react-type-animation";
 
 function App() {
   const [dob, setDob] = useState("");
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchCosmicData = async () => {
     try {
+      setLoading(true);
+
+      console.log(dob);
       const response = await axios.post(
         "http://localhost:5000/api/cosmic",
         { dob }
       );
 
       setData(response.data);
+
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden relative flex items-center justify-center p-10">
+    <div className="min-h-screen bg-black text-white overflow-hidden relative">
 
-      {/* Stars Background */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
+      {/* Animated Background */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40"></div>
 
-      <div className="relative z-10 max-w-4xl w-full">
+      {/* Glow Effects */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-purple-700 rounded-full blur-[150px] opacity-20"></div>
+
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-700 rounded-full blur-[150px] opacity-20"></div>
+
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center px-6 py-20">
 
         {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
+        <motion.h1
+          initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center"
+          className="text-6xl md:text-7xl font-bold text-center text-purple-300"
         >
-          <h1 className="text-6xl font-bold text-purple-300 mb-4">
-            Cosmic Birthday Oracle ✨
-          </h1>
+          Cosmic Birthday Oracle ✨
+        </motion.h1>
 
-          <p className="text-gray-400 mb-10">
-            Discover the universe that welcomed your birth.
-          </p>
+        {/* Typing Animation */}
+        <div className="mt-6 text-gray-300 text-center text-lg max-w-2xl">
+          <TypeAnimation
+            sequence={[
+              "Discover the universe that welcomed your birth...",
+              2000,
+              "Reveal your cosmic destiny Srishti...",
+              2000,
+              "Unlock the secrets written in the stars...",
+              2000,
+            ]}
+            speed={50}
+            repeat={Infinity}
+          />
+        </div>
+
+        {/* Input Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="mt-14 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-10 w-full max-w-2xl shadow-2xl"
+        >
+
+          <div className="flex flex-col items-center">
+
+            <input
+              type="date"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+              className="px-5 py-4 rounded-2xl bg-white/40 border border-purple-500 text-white w-full"
+            />
+
+            <button
+              onClick={fetchCosmicData}
+              className="mt-6 bg-purple-700 hover:bg-purple-800 transition-all px-8 py-4 rounded-2xl text-lg"
+            >
+              Reveal My Destiny 🌙
+            </button>
+
+          </div>
         </motion.div>
 
-        {/* Input Section */}
-        <div className="bg-white/10 border border-white/20 backdrop-blur-lg rounded-3xl p-8 shadow-2xl text-center">
+        {/* Loading */}
+        {loading && (
+          <div className="mt-10 text-purple-300 text-xl animate-pulse">
+            Reading the stars...
+          </div>
+        )}
 
-          <input
-            type="date"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
-            className="px-4 py-3 rounded-xl bg-black/40 text-white border border-purple-500"
-          />
-
-          <br />
-
-          <button
-            onClick={fetchCosmicData}
-            className="mt-6 px-6 py-3 bg-purple-700 hover:bg-purple-800 rounded-xl transition-all"
+        {/* Results */}
+        {data && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-16 max-w-4xl w-full"
           >
-            Reveal My Destiny 🌙
-          </button>
 
-          {/* RESULT */}
-          {data && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-10"
-            >
+            {/* NASA Image */}
+            <img
+              src={data.nasaImage}
+              alt="space"
+              className="rounded-3xl w-full shadow-2xl border border-purple-500"
+            />
 
-              {/* NASA IMAGE */}
-              <img
-                src={data.nasaImage}
-                alt="space"
-                className="w-full rounded-2xl shadow-2xl"
-              />
+            {/* NASA Title */}
+            <h2 className="text-4xl mt-8 text-purple-300 font-bold text-center">
+              {data.nasaTitle}
+            </h2>
 
-              <h2 className="text-3xl mt-6 text-purple-300">
-                {data.nasaTitle}
-              </h2>
+            {/* Moon Info */}
+            <div className="mt-10 grid md:grid-cols-2 gap-6">
 
-              {/* MOON INFO */}
-              <div className="mt-6 space-y-2 text-lg">
-                <p>
-                  🌙 Moon Phase:{" "}
-                  <span className="text-purple-300">
-                    {data.moonPhase}
-                  </span>
-                </p>
-
-                <p>
-                  ✨ Moon Illumination:{" "}
-                  <span className="text-purple-300">
-                    {data.moonIllumination}%
-                  </span>
-                </p>
-              </div>
-
-              {/* HOROSCOPE */}
-              <div className="mt-8 bg-black/40 p-6 rounded-2xl border border-purple-500">
-                <h3 className="text-2xl mb-4 text-purple-300">
-                  Your Cosmic Destiny 🔮
+              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-purple-500">
+                <h3 className="text-2xl text-purple-300 mb-3">
+                  🌙 Moon Phase
                 </h3>
 
-                <p className="text-gray-300 leading-8 whitespace-pre-line">
-                  {data.horoscope}
+                <p className="text-xl text-gray-300">
+                  {data.moonPhase}
                 </p>
               </div>
 
-            </motion.div>
-          )}
+              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-purple-500">
+                <h3 className="text-2xl text-purple-300 mb-3">
+                  ✨ Moon Illumination
+                </h3>
 
-        </div>
+                <p className="text-xl text-gray-300">
+                  {data.moonIllumination}%
+                </p>
+              </div>
+
+            </div>
+
+            {/* Horoscope */}
+            <div className="mt-10 bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-purple-500 shadow-2xl">
+
+              <h2 className="text-4xl text-center text-purple-300 mb-8">
+                Your Cosmic Destiny 🔮
+              </h2>
+
+              <p className="text-lg text-gray-300 leading-9 whitespace-pre-line">
+                {data.horoscope}
+              </p>
+
+            </div>
+
+          </motion.div>
+        )}
+
       </div>
     </div>
   );
