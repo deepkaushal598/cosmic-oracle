@@ -14,7 +14,7 @@ function App() {
 
       console.log(dob);
       const response = await axios.post(
-        "http://localhost:5000/api/cosmic",
+        "https://cosmic-oracle-io5v.onrender.com/api/cosmic",
         { dob }
       );
 
@@ -56,7 +56,7 @@ function App() {
             sequence={[
               "Discover the universe that welcomed your birth...",
               2000,
-              "Reveal your cosmic destiny Srishti...",
+              "Reveal your cosmic destiny Srishtig...",
               2000,
               "Unlock the secrets written in the stars...",
               2000,
